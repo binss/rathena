@@ -160,6 +160,7 @@ struct skill_cooldown_entry {
 struct vip_info {
 	unsigned int enabled : 1;
 	time_t time;
+	bool disableshowrate; //State to disable clif_display_pinfo(). [Cydh]
 };
 #endif
 
@@ -248,6 +249,7 @@ struct map_session_data {
 		unsigned disable_atcommand_on_npc : 1; //Prevent to use atcommand while talking with NPC [Kichi]
 		uint8 isBoundTrading; // Player is currently add bound item to trade list [Cydh]
 		bool ignoretimeout; // Prevent the SECURE_NPCTIMEOUT function from closing current script.
+		unsigned int workinprogress : 2; // See clif.h::e_workinprogress
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
@@ -260,6 +262,7 @@ struct map_session_data {
 		unsigned int perfect_hiding : 1; // [Valaris]
 		unsigned int no_knockback : 1;
 		unsigned int bonus_coma : 1;
+		unsigned int no_mado_fuel : 1; // Disable Magic_Gear_Fuel consumption [Secret]
 	} special_state;
 	uint32 login_id1, login_id2;
 	unsigned short class_;	//This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
@@ -368,6 +371,8 @@ struct map_session_data {
 	short sp_gain_race[RC_MAX];
 	int magic_addrace2[RC2_MAX];
 	int ignore_mdef_by_race2[RC2_MAX];
+	int dropaddrace[RC_MAX];
+	int dropaddclass[CLASS_MAX];
 	// zeroed arrays end here.
 
 	// zeroed structures start here
@@ -644,7 +649,6 @@ struct map_session_data {
 	int storage_size; /// Holds player storage size (VIP system).
 #ifdef VIP_ENABLE
 	struct vip_info vip;
-	bool disableshowrate; //State to disable clif_display_pinfo(). [Cydh]
 #endif
 
 	/// Bonus Script [Cydh]
@@ -838,6 +842,10 @@ struct {
 #define pc_isinvisible(sd)    ( (sd)->sc.option&OPTION_INVISIBLE )
 #define pc_is50overweight(sd) ( (sd)->weight*100 >= (sd)->max_weight*battle_config.natural_heal_weight_rate )
 #define pc_is90overweight(sd) ( (sd)->weight*10 >= (sd)->max_weight*9 )
+
+static inline bool pc_hasprogress(struct map_session_data *sd, enum e_wip_block progress) {
+	return sd == NULL || (sd->state.workinprogress&progress) == progress;
+}
 
 /// Enum of Player's Parameter
 enum e_params {

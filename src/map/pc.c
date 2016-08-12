@@ -1145,7 +1145,7 @@ bool pc_authok(struct map_session_data *sd, uint32 login_id2, time_t expiration_
 		sd->state.showzeny = 1;
 #ifdef VIP_ENABLE
 	if (!battle_config.vip_disp_rate)
-		sd->disableshowrate = 1;
+		sd->vip.disableshowrate = 1;
 #endif
 
 	if (!(battle_config.display_skill_fail&2))
@@ -1438,7 +1438,7 @@ void pc_reg_received(struct map_session_data *sd)
 #ifdef VIP_ENABLE
 	sd->vip.time = 0;
 	sd->vip.enabled = 0;
-	chrif_req_login_operation(sd->status.account_id, sd->status.name, CHRIF_OP_LOGIN_VIP, 0, 1, 0);  // request VIP informations
+	chrif_req_login_operation(sd->status.account_id, sd->status.name, CHRIF_OP_LOGIN_VIP, 0, 1, 0);  // request VIP information
 #endif
 	intif_Mail_requestinbox(sd->status.char_id, 0); // MAIL SYSTEM - Request Mail Inbox
 	intif_request_questlog(sd);
@@ -3044,6 +3044,10 @@ void pc_bonus(struct map_session_data *sd,int type,int val)
 			if (sd->state.lr_flag != 2)
 				sd->bonus.weapon_matk_rate += val;
 			break;
+		case SP_NO_MADO_FUEL:
+			if (sd->state.lr_flag != 2)
+				sd->special_state.no_mado_fuel = 1;
+			break;
 		default:
 			if (running_npc_stat_calc_event) {
 				ShowWarning("pc_bonus: unknown bonus type %d %d in OnPCStatCalcEvent!\n", type, val);
@@ -3695,6 +3699,16 @@ void pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 		PC_BONUS_CHK_RACE2(type2, SP_IGNORE_MDEF_RACE2);
 		if (sd->state.lr_flag != 2)
 			sd->ignore_mdef_by_race2[type2] += val;
+		break;
+	case SP_DROP_ADDRACE: // bonus2 bDropAddRace,r,x;
+		PC_BONUS_CHK_RACE(type2, SP_DROP_ADDRACE);
+		if (sd->state.lr_flag != 2)
+			sd->dropaddrace[type2] += val;
+		break;
+	case SP_DROP_ADDCLASS: // bonus2 bDropAddClass,c,x;
+		PC_BONUS_CHK_CLASS(type2, SP_DROP_ADDCLASS);
+		if (sd->state.lr_flag != 2)
+			sd->dropaddclass[type2] += val;
 		break;
 	default:
 		if (running_npc_stat_calc_event) {
@@ -4659,8 +4673,8 @@ bool pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 /*==========================================
  * Check if item is usable.
  * Return:
- *	0 = no
- *	1 = yes
+ *	false = no
+ *	true = yes
  *------------------------------------------*/
 bool pc_isUseitem(struct map_session_data *sd,int n)
 {
@@ -4852,11 +4866,17 @@ int pc_useitem(struct map_session_data *sd,int n)
 	nullpo_ret(sd);
 
 	if (sd->npc_id) {
+		if (sd->progressbar.npc_id) {
+			clif_progressbar_abort(sd);
+			return 0; // First item use attempt cancels the progress bar
+		}
 #ifdef RENEWAL
-		clif_msg(sd, USAGE_FAIL); // TODO look for the client date that has this message.
-		return 0;
+		if (pc_hasprogress(sd, WIP_DISABLE_SKILLITEM)) {
+			clif_msg(sd, WORK_IN_PROGRESS);
+			return 0;
+		}
 #else
-		if( !sd->npc_item_flag )
+		if (!sd->npc_item_flag)
 			return 0;
 #endif
 	}
@@ -5305,6 +5325,7 @@ enum e_setpos pc_setpos(struct map_session_data* sd, unsigned short mapindex, in
 
 	sd->state.changemap = (sd->mapindex != mapindex);
 	sd->state.warping = 1;
+	sd->state.workinprogress = WIP_DISABLE_NONE;
 
 	if(map[sd->bl.m].instance_id && sd->state.changemap && !map[m].instance_id) {
 		bool instance_found = false;
@@ -6427,20 +6448,17 @@ static void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsi
 			(int)(status_get_lv(src) - sd->status.base_level) >= 20)
 			bonus += 15; // pk_mode additional exp if monster >20 levels [Valaris]
 
-#ifdef VIP_ENABLE
-		//EXP bonus for VIP player
-		if (src && src->type == BL_MOB && pc_isvip(sd)) {
+		if (src && src->type == BL_MOB && pc_isvip(sd)) { // EXP bonus for VIP player
 			vip_bonus_base = battle_config.vip_base_exp_increase;
 			vip_bonus_job = battle_config.vip_job_exp_increase;
 		}
-#endif
 	}
 
 	// Give EXPBOOST for quests even if src is NULL.
 	if (&sd->sc && sd->sc.data[SC_EXPBOOST]) {
 		bonus += sd->sc.data[SC_EXPBOOST]->val1;
-		if( battle_config.vip_bm_increase && pc_isvip(sd) ) // Increase Battle Manual EXP rate for VIP.
-			bonus += ( sd->sc.data[SC_EXPBOOST]->val1 / battle_config.vip_bm_increase );
+		if (battle_config.vip_bm_increase && pc_isvip(sd)) // Increase Battle Manual EXP rate for VIP
+			bonus += (sd->sc.data[SC_EXPBOOST]->val1 / battle_config.vip_bm_increase);
 	}
 
 	if (*base_exp) {
@@ -7391,7 +7409,7 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
 		skill_sit(sd,0);
 	}
 
-	if( sd->progressbar.npc_id )
+	if (sd->progressbar.npc_id)
 		clif_progressbar_abort(sd);
 
 	if( sd->status.pet_id > 0 && sd->pd && battle_config.pet_damage_support )
@@ -7634,20 +7652,19 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 		&& !map[sd->bl.m].flag.noexppenalty && !map_flag_gvg(sd->bl.m)
 		&& !sd->sc.data[SC_BABY] && !sd->sc.data[SC_LIFEINSURANCE])
 	{
-		uint32 base_penalty = battle_config.death_penalty_base;
-		uint32 job_penalty = battle_config.death_penalty_job;
-		uint32 zeny_penalty = battle_config.zeny_penalty;
+		uint32 base_penalty = 0;
+		uint32 job_penalty = 0;
+		uint32 zeny_penalty = 0;
 
-#ifdef VIP_ENABLE
-		if(pc_isvip(sd)){
-			base_penalty *= battle_config.vip_exp_penalty_base;
-			job_penalty *= battle_config.vip_exp_penalty_job;
+		if (pc_isvip(sd)) { // EXP penalty for VIP
+			base_penalty = battle_config.vip_exp_penalty_base;
+			job_penalty = battle_config.vip_exp_penalty_job;
+			zeny_penalty = battle_config.vip_zeny_penalty;
+		} else {
+			base_penalty = battle_config.death_penalty_base;
+			job_penalty = battle_config.death_penalty_job;
+			zeny_penalty = battle_config.zeny_penalty;
 		}
-		else {
-			base_penalty *= battle_config.vip_exp_penalty_base_normal;
-			job_penalty *= battle_config.vip_exp_penalty_job_normal;
-		}
-#endif
 
 		if ((battle_config.death_penalty_maxlv&1 || !pc_is_maxbaselv(sd)) && base_penalty > 0) {
 			switch (battle_config.death_penalty_type) {
@@ -10280,10 +10297,8 @@ static int pc_autosave(int tid, unsigned int tick, int id, intptr_t data)
 		//Save char.
 		last_save_id = sd->bl.id;
 		save_flag = 2;
-#ifdef VIP_ENABLE
-		if(sd->vip.enabled) //check if we're still vip
+		if (pc_isvip(sd)) // Check if we're still VIP
 			chrif_req_login_operation(1, sd->status.name, 6, 0, 1, 0);
-#endif
 		chrif_save(sd,0);
 		break;
 	}

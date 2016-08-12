@@ -513,6 +513,7 @@ extern struct Battle_Config
 	int vcast_stat_scale;
 
 	int mvp_tomb_enabled;
+	int mvp_tomb_delay;
 
 	int atcommand_suggestions_enabled;
 	int min_npc_vendchat_distance;
@@ -532,12 +533,11 @@ extern struct Battle_Config
 	int vip_storage_increase;
 	int vip_base_exp_increase;
 	int vip_job_exp_increase;
+	int vip_zeny_penalty;
 	int vip_bm_increase;
 	int vip_drop_increase;
 	int vip_gemstone;
-	int vip_exp_penalty_base_normal;
 	int vip_exp_penalty_base;
-	int vip_exp_penalty_job_normal;
 	int vip_exp_penalty_job;
 	int vip_disp_rate;
 	int mon_trans_disable_in_gvg;
@@ -610,6 +610,8 @@ extern struct Battle_Config
 	int exp_cost_inspiration;
 	int mvp_exp_reward_message;
 	int can_damage_skill; //Which BL types can damage traps
+
+#include "../custom/battle_config_struct.inc"
 } battle_config;
 
 void do_init_battle(void);

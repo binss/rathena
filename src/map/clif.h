@@ -142,6 +142,13 @@ enum e_adopt_reply {
 	ADOPT_REPLY_MARRIED,
 };
 
+enum e_wip_block {
+	WIP_DISABLE_NONE = 0x0,
+	WIP_DISABLE_SKILLITEM = 0x1,
+	WIP_DISABLE_NPC = 0x2,
+	WIP_DISABLE_ALL = 0x3,
+};
+
 // packet_db[SERVER] is reserved for server use
 #define SERVER 0
 #define packet_len(cmd) packet_db[SERVER][cmd].len
@@ -462,7 +469,7 @@ enum clif_messages {
 	ITEM_PRODUCE_FAIL = 0x628,
 	ITEM_UNIDENTIFIED = 0x62d,
 	ITEM_REUSE_LIMIT = 0x746,
-	USAGE_FAIL = 0x783,
+	WORK_IN_PROGRESS = 0x783,
 	NEED_REINS_OF_MOUNT = 0x78c,
 	MERGE_ITEM_NOT_AVAILABLE = 0x887,
 };
@@ -672,6 +679,7 @@ void clif_item_repair_list(struct map_session_data *sd, struct map_session_data 
 void clif_item_repaireffect(struct map_session_data *sd, int idx, int flag);
 void clif_item_damaged(struct map_session_data* sd, unsigned short position);
 void clif_item_refine_list(struct map_session_data *sd);
+void clif_item_effects( struct block_list* bl, bool enable, short effects[], int count );
 
 void clif_item_skill(struct map_session_data *sd,uint16 skill_id,uint16 skill_lv);
 

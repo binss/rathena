@@ -829,11 +829,23 @@ void initChangeTables(void)
 	set_sc_with_vfx( RL_C_MARKER	, SC_C_MARKER		, SI_C_MARKER		, SCB_FLEE );
 	set_sc_with_vfx( RL_AM_BLAST	, SC_ANTI_M_BLAST	, SI_ANTI_M_BLAST	, SCB_NONE );
 
+	// New Mounts
+	set_sc_with_vfx_noskill( SC_ALL_RIDING	, SI_ALL_RIDING	, SCB_SPEED );
+
+	// Costumes
 	set_sc_with_vfx_noskill( SC_MOONSTAR	, SI_MOONSTAR	, SCB_NONE );
 	set_sc_with_vfx_noskill( SC_SUPER_STAR	, SI_SUPER_STAR	, SCB_NONE );
-	set_sc_with_vfx_noskill( SC_ALL_RIDING	, SI_ALL_RIDING	, SCB_SPEED );
 	set_sc_with_vfx_noskill( SC_STRANGELIGHTS	, SI_STRANGELIGHTS	, SCB_NONE );
 	set_sc_with_vfx_noskill( SC_DECORATION_OF_MUSIC		, SI_DECORATION_OF_MUSIC		, SCB_NONE );
+	set_sc_with_vfx_noskill( SC_LJOSALFAR	, SI_LJOSALFAR	, SCB_NONE);
+	set_sc_with_vfx_noskill( SC_MERMAID_LONGING	, SI_MERMAID_LONGING	, SCB_NONE);
+	set_sc_with_vfx_noskill( SC_HAT_EFFECT	, SI_HAT_EFFECT	, SCB_NONE);
+	set_sc_with_vfx_noskill( SC_FLOWERSMOKE	, SI_FLOWERSMOKE	, SCB_NONE);
+	set_sc_with_vfx_noskill( SC_FSTONE	, SI_FSTONE	, SCB_NONE);
+	set_sc_with_vfx_noskill( SC_HAPPINESS_STAR	, SI_HAPPINESS_STAR	, SCB_NONE);
+	set_sc_with_vfx_noskill( SC_MAPLE_FALLS	, SI_MAPLE_FALLS	, SCB_NONE);
+	set_sc_with_vfx_noskill( SC_TIME_ACCESSORY	, SI_TIME_ACCESSORY	, SCB_NONE);
+	set_sc_with_vfx_noskill( SC_MAGICAL_FEATHER	, SI_MAGICAL_FEATHER	, SCB_NONE);
 
 	/* Summoner */
 	set_sc( SU_HIDE					, SC_SUHIDE			, SI_SUHIDE			, SCB_NONE );
@@ -1025,12 +1037,8 @@ void initChangeTables(void)
 	StatusIconChangeTable[SC_MTF_MATK] = SI_MTF_MATK;
 	StatusIconChangeTable[SC_MTF_MLEATKED] = SI_MTF_MLEATKED;
 	StatusIconChangeTable[SC_MTF_CRIDAMAGE] = SI_MTF_CRIDAMAGE;
-	StatusIconChangeTable[SC_MOONSTAR] = SI_MOONSTAR;
-	StatusIconChangeTable[SC_SUPER_STAR] = SI_SUPER_STAR;
 	StatusIconChangeTable[SC_QD_SHOT_READY] = SI_E_QD_SHOT_READY;
 	StatusIconChangeTable[SC_HEAT_BARREL_AFTER] = SI_HEAT_BARREL_AFTER;
-	StatusIconChangeTable[SC_STRANGELIGHTS] = SI_STRANGELIGHTS;
-	StatusIconChangeTable[SC_DECORATION_OF_MUSIC] = SI_DECORATION_OF_MUSIC;
 	StatusIconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
 	StatusIconChangeTable[SC_QUEST_BUFF2] = SI_QUEST_BUFF2;
 	StatusIconChangeTable[SC_QUEST_BUFF3] = SI_QUEST_BUFF3;
@@ -1044,6 +1052,21 @@ void initChangeTables(void)
 	StatusIconChangeTable[SC_MTF_MSP] = SI_MTF_MSP;
 	StatusIconChangeTable[SC_MTF_PUMPKIN] = SI_MTF_PUMPKIN;
 	StatusIconChangeTable[SC_NORECOVER_STATE] = SI_HANDICAPSTATE_NORECOVER;
+
+	// Costumes
+	StatusIconChangeTable[SC_MOONSTAR] = SI_MOONSTAR;
+	StatusIconChangeTable[SC_SUPER_STAR] = SI_SUPER_STAR;
+	StatusIconChangeTable[SC_STRANGELIGHTS] = SI_STRANGELIGHTS;
+	StatusIconChangeTable[SC_DECORATION_OF_MUSIC] = SI_DECORATION_OF_MUSIC;
+	StatusIconChangeTable[SC_LJOSALFAR] = SI_LJOSALFAR;
+	StatusIconChangeTable[SC_MERMAID_LONGING] = SI_MERMAID_LONGING;
+	StatusIconChangeTable[SC_HAT_EFFECT] = SI_HAT_EFFECT;
+	StatusIconChangeTable[SC_FLOWERSMOKE] = SI_FLOWERSMOKE;
+	StatusIconChangeTable[SC_FSTONE] = SI_FSTONE;
+	StatusIconChangeTable[SC_HAPPINESS_STAR] = SI_HAPPINESS_STAR;
+	StatusIconChangeTable[SC_MAPLE_FALLS] = SI_MAPLE_FALLS;
+	StatusIconChangeTable[SC_TIME_ACCESSORY] = SI_TIME_ACCESSORY;
+	StatusIconChangeTable[SC_MAGICAL_FEATHER] = SI_MAGICAL_FEATHER;
 
 	/* Summoners status icons */
 	StatusIconChangeTable[SC_SPRITEMABLE] = SI_SPRITEMABLE;
@@ -1173,10 +1196,6 @@ void initChangeTables(void)
 	StatusChangeFlagTable[SC_MTF_ASPD] |= SCB_ASPD|SCB_HIT;
 	StatusChangeFlagTable[SC_MTF_MATK] |= SCB_MATK;
 	StatusChangeFlagTable[SC_MTF_MLEATKED] |= SCB_ALL;
-	StatusChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
-	StatusChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
-	StatusChangeFlagTable[SC_STRANGELIGHTS] |= SCB_NONE;
-	StatusChangeFlagTable[SC_DECORATION_OF_MUSIC] |= SCB_NONE;
 	StatusChangeFlagTable[SC_QUEST_BUFF1] |= SCB_BATK|SCB_MATK;
 	StatusChangeFlagTable[SC_QUEST_BUFF2] |= SCB_BATK|SCB_MATK;
 	StatusChangeFlagTable[SC_QUEST_BUFF3] |= SCB_BATK|SCB_MATK;
@@ -1186,6 +1205,21 @@ void initChangeTables(void)
 	StatusChangeFlagTable[SC_MTF_HITFLEE] |= SCB_HIT|SCB_FLEE;
 	StatusChangeFlagTable[SC_MTF_MHP] |= SCB_MAXHP;
 	StatusChangeFlagTable[SC_MTF_MSP] |= SCB_MAXSP;
+
+	// Costumes
+	StatusChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
+	StatusChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
+	StatusChangeFlagTable[SC_STRANGELIGHTS] |= SCB_NONE;
+	StatusChangeFlagTable[SC_DECORATION_OF_MUSIC] |= SCB_NONE;
+	StatusChangeFlagTable[SC_LJOSALFAR] |= SCB_NONE;
+	StatusChangeFlagTable[SC_MERMAID_LONGING] |= SCB_NONE;
+	StatusChangeFlagTable[SC_HAT_EFFECT] |= SCB_NONE;
+	StatusChangeFlagTable[SC_FLOWERSMOKE] |= SCB_NONE;
+	StatusChangeFlagTable[SC_FSTONE] |= SCB_NONE;
+	StatusChangeFlagTable[SC_HAPPINESS_STAR] |= SCB_NONE;
+	StatusChangeFlagTable[SC_MAPLE_FALLS] |= SCB_NONE;
+	StatusChangeFlagTable[SC_TIME_ACCESSORY] |= SCB_NONE;
+	StatusChangeFlagTable[SC_MAGICAL_FEATHER] |= SCB_NONE;
 
 #ifdef RENEWAL
 	// renewal EDP increases your weapon atk
@@ -1232,11 +1266,22 @@ void initChangeTables(void)
 	StatusDisplayType[SC_ILLUSIONDOPING]	  = true;
 	StatusDisplayType[SC_C_MARKER]		  = true;
 	StatusDisplayType[SC_ANTI_M_BLAST]	  = true;
-	StatusDisplayType[SC_MOONSTAR]		  = true;
-	StatusDisplayType[SC_SUPER_STAR]	  = true;
-	StatusDisplayType[SC_STRANGELIGHTS]	  = true;
-	StatusDisplayType[SC_DECORATION_OF_MUSIC] = true;
 	StatusDisplayType[SC_SPRITEMABLE]     = true;
+
+	// Costumes
+	StatusDisplayType[SC_MOONSTAR] = true;
+	StatusDisplayType[SC_SUPER_STAR] = true;
+	StatusDisplayType[SC_STRANGELIGHTS] = true;
+	StatusDisplayType[SC_DECORATION_OF_MUSIC] = true;
+	StatusDisplayType[SC_LJOSALFAR] = true;
+	StatusDisplayType[SC_MERMAID_LONGING] = true;
+	StatusDisplayType[SC_HAT_EFFECT] = true;
+	StatusDisplayType[SC_FLOWERSMOKE] = true;
+	StatusDisplayType[SC_FSTONE] = true;
+	StatusDisplayType[SC_HAPPINESS_STAR] = true;
+	StatusDisplayType[SC_MAPLE_FALLS] = true;
+	StatusDisplayType[SC_TIME_ACCESSORY] = true;
+	StatusDisplayType[SC_MAGICAL_FEATHER] = true;
 
 	/* StatusChangeState (SCS_) NOMOVE */
 	StatusChangeStateTable[SC_ANKLE]				|= SCS_NOMOVE;
@@ -3123,6 +3168,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		+ sizeof(sd->ignore_mdef_by_class)
 		+ sizeof(sd->ignore_def_by_race)
 		+ sizeof(sd->sp_gain_race)
+		+ sizeof(sd->dropaddrace)
+		+ sizeof(sd->dropaddclass)
 		);
 
 	memset (&sd->right_weapon.overrefine, 0, sizeof(sd->right_weapon) - sizeof(sd->right_weapon.atkmods));
@@ -3256,11 +3303,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 				wa->atk2 = refine_info[wlv].bonus[r-1] / 100;
 #ifdef RENEWAL
 			wa->matk += sd->inventory_data[index]->matk;
-			if (sd->bonus.weapon_matk_rate)
-				wa->matk += sd->inventory_data[index]->matk * sd->bonus.weapon_matk_rate / 100;
 			wa->wlv = wlv;
 			if(r && sd->weapontype1 != W_BOW) // Renewal magic attack refine bonus
 				wa->matk += refine_info[wlv].bonus[r-1] / 100;
+			if (sd->bonus.weapon_matk_rate)
+				wa->matk += wa->matk * sd->bonus.weapon_matk_rate / 100;
 #endif
 			if(r) // Overrefine bonus.
 				wd->overrefine = refine_info[wlv].randombonus_max[r-1] / 100;
@@ -6284,8 +6331,8 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 				val = max( val, 50 );
 			if( sc->data[SC_MARSHOFABYSS] )
 				val = max( val, sc->data[SC_MARSHOFABYSS]->val3 );
-			if( sc->data[SC_CAMOUFLAGE] && (sc->data[SC_CAMOUFLAGE]->val3&1) == 0 )
-				val = max( val, sc->data[SC_CAMOUFLAGE]->val1 < 3 ? 0 : 25 * (5 - sc->data[SC_CAMOUFLAGE]->val1) );
+			if( sc->data[SC_CAMOUFLAGE] && sc->data[SC_CAMOUFLAGE]->val1 > 2 )
+				val = max( val, 25 * (5 - sc->data[SC_CAMOUFLAGE]->val1) );
 			if( sc->data[SC_STEALTHFIELD] )
 				val = max( val, 20 );
 			if( sc->data[SC__LAZINESS] )
@@ -7643,6 +7690,16 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		case SC_OBLIVIONCURSE: // 100% - (100 - 0.8 x INT)
 			sc_def = status->int_*80;
 			sc_def = max(sc_def, 500); // minimum of 5% resist
+			tick_def = 0;
+			//Fall through
+		case SC_TOXIN:
+		case SC_PARALYSE:
+		case SC_VENOMBLEED:
+		case SC_MAGICMUSHROOM:
+		case SC_DEATHHURT:
+		case SC_PYREXIA:
+		case SC_LEECHESEND:
+			tick_def2 = (status->vit + status->luk) * 500;
 			break;
 		case SC_BITE: // {(Base Success chance) - (Target's AGI / 4)}
 			sc_def2 = status->agi*25;
@@ -7765,6 +7822,7 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 			break;
 		case SC_BURNING:
 		case SC_STASIS:
+		case SC_VOICEOFSIREN:
 			tick = max(tick, 10000); // Minimum duration 10s
 			break;
 		default:
@@ -11080,11 +11138,7 @@ int status_change_clear(struct block_list* bl, int type)
 			case SC_PUSH_CART:
 			case SC_LIGHT_OF_REGENE:
 			case SC_STYLE_CHANGE:
-			case SC_MOONSTAR:
-			case SC_SUPER_STAR:
 			case SC_HEAT_BARREL_AFTER:
-			case SC_STRANGELIGHTS:
-			case SC_DECORATION_OF_MUSIC:
 			case SC_QUEST_BUFF1:
 			case SC_QUEST_BUFF2:
 			case SC_QUEST_BUFF3:
@@ -11109,6 +11163,20 @@ int status_change_clear(struct block_list* bl, int type)
 			case SC_REUSE_STORMBLAST:
 			case SC_ALL_RIDING_REUSE_LIMIT:
 			case SC_SPRITEMABLE:
+			// Costumes
+			case SC_MOONSTAR:
+			case SC_SUPER_STAR:
+			case SC_STRANGELIGHTS:
+			case SC_DECORATION_OF_MUSIC:
+			case SC_LJOSALFAR:
+			case SC_MERMAID_LONGING:
+			case SC_HAT_EFFECT:
+			case SC_FLOWERSMOKE:
+			case SC_FSTONE:
+			case SC_HAPPINESS_STAR:
+			case SC_MAPLE_FALLS:
+			case SC_TIME_ACCESSORY:
+			case SC_MAGICAL_FEATHER:
 				continue;
 			}
 		}
@@ -11121,10 +11189,20 @@ int status_change_clear(struct block_list* bl, int type)
 			case SC_PUSH_CART:
 			case SC_ALL_RIDING:
 			case SC_STYLE_CHANGE:
+			// Costumes
 			case SC_MOONSTAR:
 			case SC_SUPER_STAR:
 			case SC_STRANGELIGHTS:
 			case SC_DECORATION_OF_MUSIC:
+			case SC_LJOSALFAR:
+			case SC_MERMAID_LONGING:
+			case SC_HAT_EFFECT:
+			case SC_FLOWERSMOKE:
+			case SC_FSTONE:
+			case SC_HAPPINESS_STAR:
+			case SC_MAPLE_FALLS:
+			case SC_TIME_ACCESSORY:
+			case SC_MAGICAL_FEATHER:
 				continue;
 			}
 		}
@@ -12435,9 +12513,14 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 	case SC_CLOUD_KILL: {
 			struct block_list *src = map_id2bl(sce->val2), *unit_bl = map_id2bl(sce->val3);
 
-			if (src && unit_bl)
+			if (src && unit_bl){
+				map_freeblock_lock();
+				dounlock = true;
 				skill_attack(skill_get_type(status_sc2skill(type)), src, unit_bl, bl, SO_CLOUD_KILL, sce->val1, tick, 0);
-			sc_timer_next(500 + tick, status_change_timer, bl->id, data);
+
+				if( !status_isdead(bl) )
+					sc_timer_next(500 + tick, status_change_timer, bl->id, data);
+			}
 		}
 		break;
 
@@ -12987,16 +13070,12 @@ void status_change_clear_buffs(struct block_list* bl, uint8 type)
 			case SC_STYLE_CHANGE:
 			case SC_MONSTER_TRANSFORM:
 			case SC_ACTIVE_MONSTER_TRANSFORM:
-			case SC_MOONSTAR:
-			case SC_SUPER_STAR:
 			case SC_MTF_ASPD:
 			case SC_MTF_RANGEATK:
 			case SC_MTF_MATK:
 			case SC_MTF_MLEATKED:
 			case SC_MTF_CRIDAMAGE:
 			case SC_HEAT_BARREL_AFTER:
-			case SC_STRANGELIGHTS:
-			case SC_DECORATION_OF_MUSIC:
 			case SC_QUEST_BUFF1:
 			case SC_QUEST_BUFF2:
 			case SC_QUEST_BUFF3:
@@ -13029,6 +13108,20 @@ void status_change_clear_buffs(struct block_list* bl, uint8 type)
 			case SC_ALL_RIDING_REUSE_LIMIT:
 			case SC_SPRITEMABLE:
 			case SC_BITESCAR:
+			// Costumes
+			case SC_MOONSTAR:
+			case SC_SUPER_STAR:
+			case SC_STRANGELIGHTS:
+			case SC_DECORATION_OF_MUSIC:
+			case SC_LJOSALFAR:
+			case SC_MERMAID_LONGING:
+			case SC_HAT_EFFECT:
+			case SC_FLOWERSMOKE:
+			case SC_FSTONE:
+			case SC_HAPPINESS_STAR:
+			case SC_MAPLE_FALLS:
+			case SC_TIME_ACCESSORY:
+			case SC_MAGICAL_FEATHER:
 				continue;
 			// Chemical Protection is only removed by some skills
 			case SC_CP_WEAPON:
